@@ -23,7 +23,7 @@ spec:
 
       - name: sample-app
 
-        image: ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/sample-app:latest
+          image: IMAGE_PLACEHOLDER
 
         ports:
 
