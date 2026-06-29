@@ -26,15 +26,22 @@ pipeline {
         }
 
         stage('Login to Amazon ECR') {
-            steps {
-                sh '''
-                aws ecr get-login-password --region ${AWS_REGION} | \
+    steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-credentials'
+        ]]) {
+            sh '''
+                aws sts get-caller-identity
+
+                aws ecr get-login-password --region us-east-1 | \
                 docker login \
                 --username AWS \
-                --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                '''
-            }
+                --password-stdin 610981310163.dkr.ecr.us-east-1.amazonaws.com
+            '''
         }
+    }
+}
 
         stage('Tag Image') {
             steps {
