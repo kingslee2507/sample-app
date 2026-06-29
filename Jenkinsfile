@@ -74,19 +74,26 @@ pipeline {
     }
 }
 
-        stage('Deploy to EKS') {
-            steps {
-                sh '''
+       stage('Deploy to EKS') {
+    steps {
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-creds'
+        ]]) {
+            sh '''
+                aws eks update-kubeconfig \
+                  --region ${AWS_REGION} \
+                  --name ${CLUSTER_NAME}
+
                 sed -i "s|IMAGE_PLACEHOLDER|${ECR_REPO}:${BUILD_NUMBER}|g" kubernetes/deployment.yaml
 
                 kubectl apply -f kubernetes/
 
                 kubectl rollout status deployment/sample-app
-                '''
-            }
+            '''
         }
-
     }
+}
 
     post {
 
