@@ -91,9 +91,11 @@ pipeline {
 
                 kubectl rollout status deployment/sample-app
             '''
+            }
         }
     }
 }
+        
 
     post {
 
